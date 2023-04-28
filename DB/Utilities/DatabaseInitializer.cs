@@ -61,7 +61,6 @@ namespace DB.Utilities
 
             context.Expenses.AddRange(expenses);
             context.SaveChanges(); // save changes to the database
-            Console.WriteLine($"I also saved the changes at the end bruh");
         }
 
         public static void ResetDb()
