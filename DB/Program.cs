@@ -1,5 +1,4 @@
 ﻿using DB;
-using DB.models;
 using DB.Utilities;
 
 DatabaseInitializer.ResetDb();
