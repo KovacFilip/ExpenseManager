@@ -11,6 +11,5 @@ namespace DB.models
         public string Category { get; set; }
         public int Price { get; set; }
         public int PersonId { get; set; }
-        public Person Person { get; set; }
     }
 }

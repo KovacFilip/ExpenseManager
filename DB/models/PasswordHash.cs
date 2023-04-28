@@ -9,6 +9,5 @@ namespace DB.models
     {
         public int PersonId { get; set; }
         public string Hash { get; set; }
-        public Person Person { get; set; }
     }
 }

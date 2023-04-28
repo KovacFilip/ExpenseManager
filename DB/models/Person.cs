@@ -9,8 +9,6 @@ namespace DB.models
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        public int Role { get; set; }
-        public List<Expense> Expenses { get; set; }
-        public PasswordHash PasswordHash { get; set; }
+        public Roles Role { get; set; }
     }
 }
