@@ -116,5 +116,24 @@ namespace DB.UnitOfWork
                 .Where((expense) => expense.Category == category)
                 .ToList();
         }
+
+        public Person? Login(string username, string password)
+        {
+            var hash = HelperFunctions.HashPassword(password);
+            var person = _userRepo.FindPersonByUsername(username);
+
+            if (person == null)
+            {
+                return null;
+            }
+
+            var personHash = _passwordRepo.FindUserPasswordHash(person.Id);
+            if (hash == personHash!.Hash)
+            {
+                return person;
+            }
+
+            return null;
+        }
     }
 }

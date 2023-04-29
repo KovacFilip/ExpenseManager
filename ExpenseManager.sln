@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB", "DB\DB.csproj", "{BD37
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{6DE198A3-BF51-45EE-BB47-0DB8CBD8F17E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +46,17 @@ Global
 		{6DE198A3-BF51-45EE-BB47-0DB8CBD8F17E}.Release|x64.Build.0 = Release|Any CPU
 		{6DE198A3-BF51-45EE-BB47-0DB8CBD8F17E}.Release|x86.ActiveCfg = Release|Any CPU
 		{6DE198A3-BF51-45EE-BB47-0DB8CBD8F17E}.Release|x86.Build.0 = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Debug|x86.Build.0 = Debug|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|x64.Build.0 = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{4A07DB16-4CB5-47CD-A603-C07DADFB55D8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
