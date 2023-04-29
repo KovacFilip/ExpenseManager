@@ -33,7 +33,7 @@ namespace DB.UnitOfWork
             _context.Dispose();
         }
 
-        public void CreateUser(string username, string password, Roles role)
+        public Person CreateUser(string username, string password, Roles role)
         {
             Person user = new Person { Username = username, Role = role };
             var person = _userRepo.AddPerson(user);
@@ -43,6 +43,8 @@ namespace DB.UnitOfWork
             PasswordHash passwordHash = new PasswordHash { Hash = hash, PersonId = person.Id };
             _passwordRepo.AddUserPassword(passwordHash);
             Commit();
+
+            return user;
         }
 
         public void DeleteUser(int id)
