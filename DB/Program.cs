@@ -1,19 +1,20 @@
 ﻿using DB;
+using DB.models;
+using DB.Repository;
+using DB.UnitOfWork;
 using DB.Utilities;
 
 DatabaseInitializer.ResetDb();
 
-using (var db = new ExpensesDbContext())
+using (var unitOfWork = new UnitOfWork())
 {
-    var userPasswordHashExpenses = db.People.Join(
-        db.PasswordHashes,
-        person => person.Id,
-        hash => hash.PersonId,
-        (person, hash) => new { person, hash }
-    );
+    unitOfWork.CreateUser("Terka", "abc123", Roles.USER);
+}
 
-    foreach (var user in userPasswordHashExpenses)
+for (int i = 1; i < 4; i++)
+{
+    using (var uow = new UnitOfWork())
     {
-        Console.WriteLine($"{user.person.Id}: {user.person.Username} - {user.hash.Hash}");
+        Console.WriteLine($"{i} - {uow.getPasswordHash(i)!.Hash}");
     }
 }
