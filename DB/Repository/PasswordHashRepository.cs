@@ -19,28 +19,28 @@ namespace DB.Repository
 
         DbSet<PasswordHash> passwordHashes => _context.PasswordHashes;
 
-        public void AddUserPassword(PasswordHash passwordHash)
+        public async Task AddUserPassword(PasswordHash passwordHash)
         {
-            passwordHashes.Add(passwordHash);
+            await passwordHashes.AddAsync(passwordHash);
         }
 
-        public void DeleteUserPassword(int id)
+        public async Task DeleteUserPassword(int id)
         {
-            var passwordHash = passwordHashes.Find(id);
+            var passwordHash = await passwordHashes.FindAsync(id);
             if (passwordHash != null)
             {
                 passwordHashes.Remove(passwordHash);
             }
         }
 
-        public PasswordHash? FindUserPasswordHash(int id)
+        public async Task<PasswordHash?> FindUserPasswordHash(int id)
         {
-            return passwordHashes.Find(id);
+            return await passwordHashes.FindAsync(id);
         }
 
-        public void UpdatePasswordHash(int id, string hash)
+        public async Task UpdatePasswordHash(int id, string hash)
         {
-            var passwordHash = passwordHashes.Find(id);
+            var passwordHash = await passwordHashes.FindAsync(id);
             if (passwordHash != null)
             {
                 passwordHash.Hash = hash;

@@ -41,7 +41,7 @@ namespace DB.UnitOfWork
             string hash = HelperFunctions.HashPassword(password);
 
             PasswordHash passwordHash = new PasswordHash { Hash = hash, PersonId = person.Id };
-            _passwordRepo.AddUserPassword(passwordHash);
+            await _passwordRepo.AddUserPassword(passwordHash);
             Commit();
 
             return user;
@@ -50,7 +50,7 @@ namespace DB.UnitOfWork
         public async Task DeleteUser(int id)
         {
             await _userRepo.DeletePerson(id);
-            _passwordRepo.DeleteUserPassword(id);
+            await _passwordRepo.DeleteUserPassword(id);
             Commit();
         }
 
@@ -76,14 +76,14 @@ namespace DB.UnitOfWork
             return _userRepo.FindAllByRole(role);
         }
 
-        public void ChangePassword(int id, string password)
+        public async Task ChangePassword(int id, string password)
         {
             var hash = HelperFunctions.HashPassword(password);
-            _passwordRepo.UpdatePasswordHash(id, hash);
+            await _passwordRepo.UpdatePasswordHash(id, hash);
             Commit();
         }
 
-        public PasswordHash? getPasswordHash(int id)
+        public Task<PasswordHash?> getPasswordHash(int id)
         {
             return _passwordRepo.FindUserPasswordHash(id);
         }
@@ -129,7 +129,7 @@ namespace DB.UnitOfWork
                 return null;
             }
 
-            var personHash = _passwordRepo.FindUserPasswordHash(person.Id);
+            var personHash = await _passwordRepo.FindUserPasswordHash(person.Id);
             if (hash == personHash!.Hash)
             {
                 return person;
