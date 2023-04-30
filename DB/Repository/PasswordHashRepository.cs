@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DB.Repository
 {
-    public class PasswordHashRepository
+    public class PasswordHashRepository : IPasswordHashRepository
     {
         private ExpensesDbContext _context;
 

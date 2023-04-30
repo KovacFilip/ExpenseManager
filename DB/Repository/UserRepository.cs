@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DB.Repository
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private ExpensesDbContext _context;
 
