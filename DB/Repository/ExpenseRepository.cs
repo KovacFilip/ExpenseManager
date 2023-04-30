@@ -18,23 +18,26 @@ namespace DB.Repository
 
         DbSet<Expense> expenses => _context.Expenses;
 
-        public void AddExpense(Expense expense)
+        public async Task AddExpense(Expense expense)
         {
-            expenses.Add(expense);
+            await expenses.AddAsync(expense);
         }
 
-        public void RemoveExpense(int expenseId)
+        public async Task RemoveExpense(int expenseId)
         {
-            var expense = expenses.Find(expenseId);
+            var expense = await expenses.FindAsync(expenseId);
             if (expense != null)
             {
                 expenses.Remove(expense);
             }
         }
 
-        public List<Expense> GetAllUserExpenses(int userId)
+        public Task<List<Expense>> GetAllUserExpenses(int userId)
         {
-            return expenses.Where(expense => expense.PersonId == userId).ToList();
+            return Task.Run(() =>
+            {
+                return expenses.Where(expense => expense.PersonId == userId).ToList();
+            });
         }
     }
 }

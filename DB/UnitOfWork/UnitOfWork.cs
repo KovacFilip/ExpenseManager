@@ -88,7 +88,7 @@ namespace DB.UnitOfWork
             return _passwordRepo.FindUserPasswordHash(id);
         }
 
-        public void AddExpense(string category, int price, int personId)
+        public async Task AddExpense(string category, int price, int personId)
         {
             var expense = new Expense
             {
@@ -96,27 +96,26 @@ namespace DB.UnitOfWork
                 Price = price,
                 PersonId = personId
             };
-            _expenseRepo.AddExpense(expense);
+            await _expenseRepo.AddExpense(expense);
             Commit();
         }
 
-        public void RemoveExpense(int expenseId)
+        public async Task RemoveExpense(int expenseId)
         {
-            _expenseRepo.RemoveExpense(expenseId);
+            await _expenseRepo.RemoveExpense(expenseId);
             Commit();
         }
 
-        public List<Expense> GetExpenses(int userId)
+        public Task<List<Expense>> GetExpenses(int userId)
         {
             return _expenseRepo.GetAllUserExpenses(userId);
         }
 
-        public List<Expense> GetExpensesByCategory(int userId, string category)
+        public async Task<List<Expense>> GetExpensesByCategory(int userId, string category)
         {
-            return _expenseRepo
-                .GetAllUserExpenses(userId)
-                .Where((expense) => expense.Category == category)
-                .ToList();
+            var expenses = await _expenseRepo.GetAllUserExpenses(userId);
+
+            return expenses.Where((expense) => expense.Category == category).ToList();
         }
 
         public async Task<Person?> Login(string username, string password)
