@@ -9,14 +9,14 @@ using Helper.Helpers;
 public class UnitTest1
 {
     [TestMethod]
-    public void DatabaseReset()
+    public async Task DatabaseReset()
     {
         DatabaseInitializer.ResetDb();
         Person? person;
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Admin");
+            person = await uow.FindPersonByUsername("Admin");
         }
 
         Assert.IsNotNull(person);
@@ -25,7 +25,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -34,21 +34,21 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Neexistuje");
+            person = await uow.FindPersonByUsername("Neexistuje");
         }
 
         Assert.IsNull(person);
     }
 
     [TestMethod]
-    public void LoginCorrect()
+    public async Task LoginCorrect()
     {
         DatabaseInitializer.ResetDb();
         Person? person;
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.Login("Filip", "Filip");
+            person = await uow.Login("Filip", "Filip");
         }
 
         Assert.IsNotNull(person);
@@ -56,63 +56,63 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void LoginIncorrectPassword()
+    public async Task LoginIncorrectPassword()
     {
         DatabaseInitializer.ResetDb();
 
         Person? person;
         using (var uow = new UnitOfWork())
         {
-            person = uow.Login("Filip", "TohleNeniMojeHeslo");
+            person = await uow.Login("Filip", "TohleNeniMojeHeslo");
         }
 
         Assert.IsNull(person);
     }
 
     [TestMethod]
-    public void LoginIncorrectUsername()
+    public async Task LoginIncorrectUsername()
     {
         DatabaseInitializer.ResetDb();
 
         Person? person;
         using (var uow = new UnitOfWork())
         {
-            person = uow.Login("Blbost", "Neexistuje");
+            person = await uow.Login("Blbost", "Neexistuje");
         }
 
         Assert.IsNull(person);
     }
 
     [TestMethod]
-    public void FindPersonByNameExists()
+    public async Task FindPersonByNameExists()
     {
         DatabaseInitializer.ResetDb();
 
         Person? person;
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
     }
 
     [TestMethod]
-    public void FindPersonByNameNotExists()
+    public async Task FindPersonByNameNotExists()
     {
         DatabaseInitializer.ResetDb();
 
         Person? person;
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Výmysl");
+            person = await uow.FindPersonByUsername("Výmysl");
         }
 
         Assert.IsNull(person);
     }
 
     [TestMethod]
-    public void FindAllUsers()
+    public async Task FindAllUsers()
     {
         DatabaseInitializer.ResetDb();
 
@@ -120,7 +120,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            users = uow.FindAllByRole(Roles.USER);
+            users = await uow.FindAllByRole(Roles.USER);
         }
 
         Assert.IsNotNull(users);
@@ -129,7 +129,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void FindAllAdmins()
+    public async Task FindAllAdmins()
     {
         DatabaseInitializer.ResetDb();
 
@@ -137,7 +137,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            admins = uow.FindAllByRole(Roles.ADMIN);
+            admins = await uow.FindAllByRole(Roles.ADMIN);
         }
 
         Assert.IsNotNull(admins);
@@ -146,7 +146,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void CreateUser()
+    public async Task CreateUser()
     {
         DatabaseInitializer.ResetDb();
         var username = "Terka";
@@ -157,7 +157,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.CreateUser(username, password, role);
+            person = await uow.CreateUser(username, password, role);
         }
 
         Assert.IsNotNull(person);
@@ -165,7 +165,8 @@ public class UnitTest1
         Assert.AreEqual(person.Role, Roles.USER);
     }
 
-    public void CreateAdmin()
+    [TestMethod]
+    public async Task CreateAdmin()
     {
         DatabaseInitializer.ResetDb();
 
@@ -177,7 +178,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.CreateUser(username, password, role);
+            person = await uow.CreateUser(username, password, role);
         }
 
         Assert.IsNotNull(person);
@@ -186,7 +187,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void UpdatePersonRoleToDifferent()
+    public async Task UpdatePersonRoleToDifferent()
     {
         DatabaseInitializer.ResetDb();
 
@@ -194,19 +195,19 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.UpdatePersonRole(person.Id, Roles.ADMIN);
+            await uow.UpdatePersonRole(person.Id, Roles.ADMIN);
         }
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -214,7 +215,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void UpdatePersonRoleToSame()
+    public async Task UpdatePersonRoleToSame()
     {
         DatabaseInitializer.ResetDb();
 
@@ -222,19 +223,19 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.UpdatePersonRole(person.Id, Roles.USER);
+            await uow.UpdatePersonRole(person.Id, Roles.USER);
         }
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -242,7 +243,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void UpdateUsername()
+    public async Task UpdateUsername()
     {
         DatabaseInitializer.ResetDb();
 
@@ -250,26 +251,26 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.UpdatePersonUsername(person.Id, "Jakub");
+            await uow.UpdatePersonUsername(person.Id, "Jakub");
         }
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Jakub");
+            person = await uow.FindPersonByUsername("Jakub");
         }
 
         Assert.IsNotNull(person);
@@ -277,7 +278,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void GetPasswordHash()
+    public async Task GetPasswordHash()
     {
         DatabaseInitializer.ResetDb();
 
@@ -285,7 +286,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -294,7 +295,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            hash = uow.getPasswordHash(person.Id);
+            hash = await uow.getPasswordHash(person.Id);
         }
 
         Assert.IsNotNull(hash);
@@ -302,7 +303,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void GetPasswordHashNonExistUser()
+    public async Task GetPasswordHashNonExistUser()
     {
         DatabaseInitializer.ResetDb();
 
@@ -312,14 +313,14 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            hash = uow.getPasswordHash(idNesmysl);
+            hash = await uow.getPasswordHash(idNesmysl);
         }
 
         Assert.IsNull(hash);
     }
 
     [TestMethod]
-    public void ChangePassword()
+    public async Task ChangePassword()
     {
         DatabaseInitializer.ResetDb();
         string newPassword = "Silne Heslo";
@@ -328,20 +329,20 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.ChangePassword(person.Id, newPassword);
+            await uow.ChangePassword(person.Id, newPassword);
         }
 
         PasswordHash? hashCode;
         using (var uow = new UnitOfWork())
         {
-            hashCode = uow.getPasswordHash(person.Id);
+            hashCode = await uow.getPasswordHash(person.Id);
         }
 
         Assert.IsNotNull(hashCode);
@@ -349,40 +350,40 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void DeleteUser()
+    public async Task DeleteUser()
     {
         DatabaseInitializer.ResetDb();
         Person? person;
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.DeleteUser(person.Id);
+            await uow.DeleteUser(person.Id);
         }
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNull(person);
     }
 
     [TestMethod]
-    public void GetUserExpenses()
+    public async Task GetUserExpenses()
     {
         DatabaseInitializer.ResetDb();
         Person? person;
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -390,14 +391,14 @@ public class UnitTest1
         List<Expense> expenses;
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpenses(person.Id);
+            expenses = await uow.GetExpenses(person.Id);
         }
 
         Assert.AreEqual(expenses.Count, 3);
     }
 
     [TestMethod]
-    public void AddExpense()
+    public async Task AddExpense()
     {
         DatabaseInitializer.ResetDb();
 
@@ -405,27 +406,27 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
 
         using (var uow = new UnitOfWork())
         {
-            uow.AddExpense("Nova Kategorie", 300, person.Id);
+            await uow.AddExpense("Nova Kategorie", 300, person.Id);
         }
 
         List<Expense> expenses;
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpenses(person.Id);
+            expenses = await uow.GetExpenses(person.Id);
         }
 
         Assert.AreEqual(expenses.Count, 4);
     }
 
     [TestMethod]
-    public void RemoveExpense()
+    public async Task RemoveExpense()
     {
         DatabaseInitializer.ResetDb();
 
@@ -433,7 +434,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -442,7 +443,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpenses(person.Id);
+            expenses = await uow.GetExpenses(person.Id);
         }
 
         Assert.IsNotNull(expenses);
@@ -450,12 +451,12 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            uow.RemoveExpense(expenses[0].ObjectId);
+            await uow.RemoveExpense(expenses[0].ObjectId);
         }
 
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpenses(person.Id);
+            expenses = await uow.GetExpenses(person.Id);
         }
 
         Assert.IsNotNull(expenses);
@@ -463,7 +464,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void GetExpensesByCategoryExist()
+    public async Task GetExpensesByCategoryExist()
     {
         DatabaseInitializer.ResetDb();
 
@@ -471,7 +472,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -479,7 +480,7 @@ public class UnitTest1
         List<Expense> expenses;
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpensesByCategory(person.Id, "Beer");
+            expenses = await uow.GetExpensesByCategory(person.Id, "Beer");
         }
 
         Assert.IsNotNull(expenses);
@@ -487,7 +488,7 @@ public class UnitTest1
         Assert.AreEqual(expenses[0].Category, "Beer");
     }
 
-    public void GetExpensesByCategoryDontExist()
+    public async Task GetExpensesByCategoryDontExist()
     {
         DatabaseInitializer.ResetDb();
 
@@ -495,7 +496,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            person = uow.FindPersonByUsername("Filip");
+            person = await uow.FindPersonByUsername("Filip");
         }
 
         Assert.IsNotNull(person);
@@ -503,7 +504,7 @@ public class UnitTest1
         List<Expense> expenses;
         using (var uow = new UnitOfWork())
         {
-            expenses = uow.GetExpensesByCategory(person.Id, "Neexistuje");
+            expenses = await uow.GetExpensesByCategory(person.Id, "Neexistuje");
         }
 
         Assert.IsNotNull(expenses);
