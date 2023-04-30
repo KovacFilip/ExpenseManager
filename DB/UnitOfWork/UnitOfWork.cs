@@ -33,10 +33,10 @@ namespace DB.UnitOfWork
             _context.Dispose();
         }
 
-        public Person CreateUser(string username, string password, Roles role)
+        public async Task<Person> CreateUser(string username, string password, Roles role)
         {
             Person user = new Person { Username = username, Role = role };
-            var person = _userRepo.AddPerson(user);
+            var person = await _userRepo.AddPerson(user);
 
             string hash = HelperFunctions.HashPassword(password);
 
@@ -47,31 +47,31 @@ namespace DB.UnitOfWork
             return user;
         }
 
-        public void DeleteUser(int id)
+        public async Task DeleteUser(int id)
         {
-            _userRepo.DeletePerson(id);
+            await _userRepo.DeletePerson(id);
             _passwordRepo.DeleteUserPassword(id);
             Commit();
         }
 
-        public void UpdatePersonRole(int id, Roles role)
+        public async Task UpdatePersonRole(int id, Roles role)
         {
-            _userRepo.UpdatePersonRole(id, role);
+            await _userRepo.UpdatePersonRole(id, role);
             Commit();
         }
 
-        public void UpdatePersonUsername(int id, string username)
+        public async Task UpdatePersonUsername(int id, string username)
         {
-            _userRepo.UpdatePersonUsername(id, username);
+            await _userRepo.UpdatePersonUsername(id, username);
             Commit();
         }
 
-        public Person? FindPersonByUsername(string username)
+        public Task<Person?> FindPersonByUsername(string username)
         {
             return _userRepo.FindPersonByUsername(username);
         }
 
-        public List<Person> FindAllByRole(Roles role)
+        public Task<List<Person>> FindAllByRole(Roles role)
         {
             return _userRepo.FindAllByRole(role);
         }
@@ -119,10 +119,10 @@ namespace DB.UnitOfWork
                 .ToList();
         }
 
-        public Person? Login(string username, string password)
+        public async Task<Person?> Login(string username, string password)
         {
             var hash = HelperFunctions.HashPassword(password);
-            var person = _userRepo.FindPersonByUsername(username);
+            var person = await _userRepo.FindPersonByUsername(username);
 
             if (person == null)
             {

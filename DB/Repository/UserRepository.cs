@@ -18,60 +18,66 @@ namespace DB.Repository
 
         private DbSet<Person> people => _context.People;
 
-        public Person AddPerson(Person person)
+        public async Task<Person> AddPerson(Person person)
         {
-            people.Add(person);
+            await people.AddAsync(person);
             return person;
         }
 
-        public void DeletePerson(int id)
+        public async Task DeletePerson(int id)
         {
-            var person = people.Find(id);
+            var person = await people.FindAsync(id);
             if (person != null)
             {
                 people.Remove(person);
             }
         }
 
-        public void UpdatePersonRole(int id, Roles role)
+        public async Task UpdatePersonRole(int id, Roles role)
         {
-            var person = people.Find(id);
+            var person = await people.FindAsync(id);
             if (person != null)
             {
                 person.Role = role;
             }
         }
 
-        public void UpdatePersonUsername(int id, string username)
+        public async Task UpdatePersonUsername(int id, string username)
         {
-            var person = people.Find(id);
+            var person = await people.FindAsync(id);
             if (person != null)
             {
                 person.Username = username;
             }
         }
 
-        public Person? FindPersonById(int id)
+        public async Task<Person?> FindPersonById(int id)
         {
-            return people.Find(id);
+            return await people.FindAsync(id);
         }
 
-        public Person? FindPersonByUsername(string username)
+        public Task<Person?> FindPersonByUsername(string username)
         {
-            foreach (var person in people)
+            return Task.Run(() =>
             {
-                if (person.Username == username)
+                foreach (var person in people)
                 {
-                    return person;
+                    if (person.Username == username)
+                    {
+                        return person;
+                    }
                 }
-            }
 
-            return null;
+                return null;
+            });
         }
 
-        public List<Person> FindAllByRole(Roles role)
+        public Task<List<Person>> FindAllByRole(Roles role)
         {
-            return people.Where(person => person.Role == role).ToList();
+            return Task.Run(() =>
+            {
+                return people.Where(person => person.Role == role).ToList();
+            });
         }
     }
 }
