@@ -1,0 +1,16 @@
+.linkText {
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    min-width: 100px;
+    min-height: 50px;
+    background-color: #e74646;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50px;
+}
+
+.linkText:hover {
+    background-color: #57423f;
+}
