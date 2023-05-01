@@ -1,0 +1,8 @@
+<div onclick="@onClick" class="sendButton" >
+    @ButtonText
+</div>
+
+@code {
+    [Parameter] public EventCallback<MouseEventArgs> onClick { get; set; }
+    [Parameter] public string ButtonText { get; set; }
+}

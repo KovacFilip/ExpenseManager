@@ -15,4 +15,6 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background-color: #fa9884;
+    width: 100vw;
 }

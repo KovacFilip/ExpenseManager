@@ -4,4 +4,12 @@
     background-color: #fff3e2;
     min-width: 100vw;
     min-height: 100vh;
+    align-items: center;
+}
+
+.item {
+    margin-top: 40px;
+    background-color: #ffe5ca;
+    width: 70vw;
+    height: 75vh;
 }

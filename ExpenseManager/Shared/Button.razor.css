@@ -1,16 +1,14 @@
-.linkText {
+.sendButton {
     color: white;
-    margin: 15px;
-    text-decoration: none;
-    cursor: pointer;
-    min-width: 200px;
-    min-height: 50px;
     background-color: #e74646;
+    cursor: pointer;
     text-align: center;
     line-height: 50px;
     border-radius: 50px;
+    min-width: 200px;
+    min-height: 50px;
 }
 
-.linkText:hover {
+.sendButton:hover {
     background-color: #57423f;
 }

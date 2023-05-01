@@ -1,0 +1,28 @@
+@page "/login"
+@using DB.UnitOfWork;
+@using DB.models;
+
+<div class="container">
+    <h1>Login</h1>
+
+    <div class="item">
+        <label>Username: </label>
+        <input type="text">
+    </div>
+
+    <div class="item">
+        <label>Password: </label>
+        <input type="password">
+    </div>
+    <Button ButtonText="Login" onClick="@HandleClick"></Button>
+</div>
+
+@code {
+    int timesClicked = 0;
+
+    private void HandleClick(MouseEventArgs args)
+    {
+        Console.WriteLine($"Clicked");
+        StateHasChanged();
+    }
+}
