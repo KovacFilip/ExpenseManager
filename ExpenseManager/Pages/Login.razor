@@ -1,6 +1,8 @@
 @page "/login"
-@using DB.UnitOfWork;
 @using DB.models;
+@using DB.UnitOfWork;
+@using DB.Utilities;
+@inject HttpClient HttpClient;
 
 <div class="container">
     <h1>Login</h1>
@@ -15,14 +17,24 @@
         <input type="password">
     </div>
     <Button ButtonText="Login" onClick="@HandleClick"></Button>
+    <Button ButtonText="Another button" onClick="@HandleAnotherClick"></Button>
 </div>
 
 @code {
-    int timesClicked = 0;
+    private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5000") };
 
-    private void HandleClick(MouseEventArgs args)
+    private async void HandleClick(MouseEventArgs args)
     {
-        Console.WriteLine($"Clicked");
+        var response = await httpClient.GetAsync("/api/home");
+        var content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(content);
         StateHasChanged();
+    }
+
+    private async void HandleAnotherClick(MouseEventArgs args) {
+        var content = new StringContent("Hello there");
+        var response = await httpClient.PostAsync("/api/postTry", content);
+        Console.WriteLine($"{response}");
+        
     }
 }
