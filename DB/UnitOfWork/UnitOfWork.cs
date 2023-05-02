@@ -4,7 +4,7 @@ using Helper.Helpers;
 
 namespace DB.UnitOfWork
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private ExpensesDbContext _context;
         private UserRepository _userRepo;
