@@ -23,7 +23,7 @@ namespace Helper.Helpers
             }
         }
 
-        public static string GenerateJwtToken(string username, string passwordHash, int id)
+        public static string GenerateJwtToken(string username, string passwordHash)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(passwordHash);

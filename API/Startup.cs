@@ -45,6 +45,7 @@ namespace API
                         var requestBody = await new StreamReader(
                             context.Request.Body
                         ).ReadToEndAsync();
+
                         var requestBodyJson = JsonSerializer.Deserialize<LoginObject>(requestBody);
 
                         if (
@@ -71,12 +72,10 @@ namespace API
                             if (person != null)
                             {
                                 Console.WriteLine($"{person.Username}, {person.Id}, {person.Role}");
-                                string jwt = HelperFunctions.GenerateJwtToken(
-                                    person.Username,
-                                    requestBodyJson.PasswordHash
-                                );
+
+                                string resToFe = JsonSerializer.Serialize(person);
                                 context.Response.StatusCode = (int)HttpStatusCode.OK;
-                                await context.Response.WriteAsync(jwt);
+                                await context.Response.WriteAsync(resToFe);
                             }
                             else
                             {

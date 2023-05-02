@@ -2,6 +2,8 @@
 @using Helper.Helpers;
 @using Helper.ObjectsToApi;
 @using System.Text.Json;
+@inject IJSRuntime JSRuntime
+@using DB.models;
 @inject HttpClient HttpClient;
 
 <div class="container">
@@ -34,8 +36,16 @@
         login.PasswordHash = passwordHash;
 
         var response = await httpClient.PostAsync("/api/login", new StringContent(JsonSerializer.Serialize(login)));
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"{responseContent}");
+
+        if ((int)response.StatusCode == 200) {
+
+            string res = await response.Content.ReadAsStringAsync();
+            Person? person = JsonSerializer.Deserialize<Person>(res);
+
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "id", person!.Id);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "name", person!.Username);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "role", person!.Role);
+        }
     }
 
 }
