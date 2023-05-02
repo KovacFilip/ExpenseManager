@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManager", "ExpenseManager\ExpenseManager.csproj", "{7CE16CFE-D774-4BA0-BC00-C5CBA54637DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{D028549F-277B-44E7-B87B-D5DA065B9ABF}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +74,17 @@ Global
 		{7CE16CFE-D774-4BA0-BC00-C5CBA54637DA}.Release|x64.Build.0 = Release|Any CPU
 		{7CE16CFE-D774-4BA0-BC00-C5CBA54637DA}.Release|x86.ActiveCfg = Release|Any CPU
 		{7CE16CFE-D774-4BA0-BC00-C5CBA54637DA}.Release|x86.Build.0 = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|x64.Build.0 = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Debug|x86.Build.0 = Debug|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|x64.ActiveCfg = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|x64.Build.0 = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|x86.ActiveCfg = Release|Any CPU
+		{D028549F-277B-44E7-B87B-D5DA065B9ABF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
