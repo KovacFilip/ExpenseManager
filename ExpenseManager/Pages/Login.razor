@@ -1,7 +1,7 @@
 @page "/login"
-@using DB.models;
-@using DB.UnitOfWork;
-@using DB.Utilities;
+@using Helper.Helpers;
+@using Helper.ObjectsToApi;
+@using System.Text.Json;
 @inject HttpClient HttpClient;
 
 <div class="container">
@@ -9,32 +9,33 @@
 
     <div class="item">
         <label>Username: </label>
-        <input type="text">
+        <input type="text" @bind="usernameValue">
     </div>
 
     <div class="item">
         <label>Password: </label>
-        <input type="password">
+        <input type="password" @bind="passwordValue">
     </div>
     <Button ButtonText="Login" onClick="@HandleClick"></Button>
-    <Button ButtonText="Another button" onClick="@HandleAnotherClick"></Button>
 </div>
 
 @code {
     private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5000") };
+    private string usernameValue = "";
+    private string passwordValue = "";
 
     private async void HandleClick(MouseEventArgs args)
     {
-        var response = await httpClient.GetAsync("/api/home");
-        var content = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(content);
-        StateHasChanged();
+        var login = new LoginObject();
+
+        login.Username = usernameValue;
+
+        string passwordHash = HelperFunctions.HashPassword(passwordValue);
+        login.PasswordHash = passwordHash;
+
+        var response = await httpClient.PostAsync("/api/login", new StringContent(JsonSerializer.Serialize(login)));
+        var responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"{responseContent}");
     }
 
-    private async void HandleAnotherClick(MouseEventArgs args) {
-        var content = new StringContent("Hello there");
-        var response = await httpClient.PostAsync("/api/postTry", content);
-        Console.WriteLine($"{response}");
-        
-    }
 }

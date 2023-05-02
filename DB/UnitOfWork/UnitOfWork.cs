@@ -114,9 +114,8 @@ namespace DB.UnitOfWork
             return expenses.Where((expense) => expense.Category == category).ToList();
         }
 
-        public async Task<Person?> Login(string username, string password)
+        public async Task<Person?> Login(string username, string passwordHash)
         {
-            var hash = HelperFunctions.HashPassword(password);
             var person = await _userRepo.FindPersonByUsername(username);
 
             if (person == null)
@@ -125,7 +124,7 @@ namespace DB.UnitOfWork
             }
 
             var personHash = await _passwordRepo.FindUserPasswordHash(person.Id);
-            if (hash == personHash!.Hash)
+            if (passwordHash == personHash!.Hash)
             {
                 return person;
             }

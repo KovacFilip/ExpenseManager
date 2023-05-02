@@ -1,6 +1,11 @@
 namespace API
 {
     using System.Net;
+    using System.Text.Json;
+    using DB.models;
+    using DB.UnitOfWork;
+    using Helper.Helpers;
+    using Helper.ObjectsToApi;
 
     public class Startup
     {
@@ -34,17 +39,51 @@ namespace API
                 );
 
                 endpoints.MapPost(
-                    "/api/postTry",
+                    "/api/login",
                     async context =>
                     {
                         var requestBody = await new StreamReader(
                             context.Request.Body
                         ).ReadToEndAsync();
-                        Console.WriteLine(requestBody); // write the body to console
+                        var requestBodyJson = JsonSerializer.Deserialize<LoginObject>(requestBody);
 
-                        // Return a response to the client
-                        context.Response.StatusCode = (int)HttpStatusCode.OK;
-                        await context.Response.WriteAsync("Request received!");
+                        if (
+                            requestBody == null
+                            || requestBodyJson!.Username == null
+                            || requestBodyJson.PasswordHash == null
+                        )
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            await context.Response.WriteAsync("Empty body");
+                        }
+                        else
+                        {
+                            Person? person;
+
+                            using (var uow = new UnitOfWork())
+                            {
+                                person = await uow.Login(
+                                    requestBodyJson.Username,
+                                    requestBodyJson.PasswordHash
+                                );
+                            }
+
+                            if (person != null)
+                            {
+                                Console.WriteLine($"{person.Username}, {person.Id}, {person.Role}");
+                                string jwt = HelperFunctions.GenerateJwtToken(
+                                    person.Username,
+                                    requestBodyJson.PasswordHash
+                                );
+                                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                                await context.Response.WriteAsync(jwt);
+                            }
+                            else
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                await context.Response.WriteAsync("Incorrect login credentials!");
+                            }
+                        }
                     }
                 );
             });
