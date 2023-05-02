@@ -1,0 +1,37 @@
+@inject IJSRuntime JSRuntime
+
+<div @onclick="Navigate" class="logoutButton">
+    Logout
+</div>
+
+@code {
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private async void Navigate(){
+
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "id");
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "name");
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "role");
+        NavigationManager.NavigateTo("/login");
+    }
+}
+
+<style>
+    .logoutButton {
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    min-width: 200px;
+    min-height: 50px;
+    background-color: #e74646;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50px;
+}
+
+.logoutButton:hover {
+    background-color: #57423f;
+}
+
+</style>
