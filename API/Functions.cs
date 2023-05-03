@@ -101,5 +101,52 @@ namespace API
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             await context.Response.WriteAsync("Created new expense");
         }
+
+        public static async Task ChangePassword(HttpContext context)
+        {
+            var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+            var requestBodyJson = JsonSerializer.Deserialize<NewPassword>(requestBody);
+
+            if (requestBodyJson == null || requestBodyJson.NewPasswordHash == null)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("Invalid format");
+                return;
+            }
+
+            Console.WriteLine($"This is the body: ");
+            Console.WriteLine(
+                $"{requestBodyJson.OldPasswordHash}, {requestBodyJson.NewPasswordHash}, {requestBodyJson.PersonId}"
+            );
+            Console.WriteLine($"This is the end of the body");
+
+            PasswordHash? actualPasswordHash;
+            using (var uow = new UnitOfWork())
+            {
+                actualPasswordHash = await uow.getPasswordHash(requestBodyJson.PersonId);
+            }
+
+            if (actualPasswordHash == null)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("The person does not exist");
+                return;
+            }
+
+            if (actualPasswordHash.Hash != requestBodyJson.OldPasswordHash)
+            {
+                context.Response.StatusCode = 405;
+                await context.Response.WriteAsync("Your old password is incorrect");
+                return;
+            }
+
+            using (var uow = new UnitOfWork())
+            {
+                await uow.ChangePassword(requestBodyJson.PersonId, requestBodyJson.NewPasswordHash);
+            }
+
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            await context.Response.WriteAsync("Password changed");
+        }
     }
 }

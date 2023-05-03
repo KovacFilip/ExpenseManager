@@ -53,6 +53,7 @@
                 incorrectLogin = true;
                 usernameValue = "";
                 passwordValue = "";
+                StateHasChanged();
                 return;
             }
 
@@ -66,10 +67,11 @@
                 navigationManager.NavigateTo("/UserHome");
             }
 
-       } else {
+        } else {
             incorrectLogin = true;
             usernameValue = "";
             passwordValue = "";
+            StateHasChanged();
         }
      
     

@@ -72,10 +72,9 @@ namespace DB.UnitOfWork
             return _userRepo.FindAllByRole(role);
         }
 
-        public async Task ChangePassword(int id, string password)
+        public async Task ChangePassword(int id, string passwordHash)
         {
-            var hash = HelperFunctions.HashPassword(password);
-            await _passwordRepo.UpdatePasswordHash(id, hash);
+            await _passwordRepo.UpdatePasswordHash(id, passwordHash);
             Commit();
         }
 
