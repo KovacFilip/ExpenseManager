@@ -1,11 +1,13 @@
+@using Microsoft.AspNetCore.Components;
+@inject NavigationManager NavigationManager;
+
 <div @onclick="Navigate" class="linkText">
     @ChildContent
 </div>
 
 @code {
-    [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public string Href { get; set;  }
-    [Inject] private NavigationManager NavigationManager { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; } 
+    [Parameter] public string Href { get; set; } = "";
 
     private void Navigate(){
         NavigationManager.NavigateTo(Href);

@@ -1,10 +1,17 @@
-﻿@inject AuthService AuthService
+﻿@using DB.models;
+@inject AuthService AuthService
 
 @if (AuthService.IsLoggedIn) {
     <div class="navContainer">
-        <NavButton Href="counter">Counter</NavButton>
-        <NavButton Href="fetchdata">Fetch Data</NavButton>
-        <NavButton Href="login">Login</NavButton>
+        @if (AuthService.Person != null && AuthService.Person.Role == Roles.ADMIN) {
+            <NavButton Href="counter">Create A User</NavButton>
+            <NavButton Href="fetchdata">Delete A User</NavButton>
+        }
+
+        @if (AuthService.Person != null && AuthService.Person.Role == Roles.USER) {
+            <NavButton Href="counter">Add An Expense</NavButton>
+            <NavButton Href="fetchdata">Change Password</NavButton>
+        }
         <LogoutButton></LogoutButton>
     </div>
 }

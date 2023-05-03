@@ -1,5 +1,4 @@
 @page "/";
-@page "/login";
 @using Helper.Helpers;
 @using Helper.ObjectsToApi;
 @using System.Text.Json;
@@ -7,6 +6,7 @@
 @using ExpenseManager;
 @inject HttpClient HttpClient;
 @inject AuthService AuthService;
+@inject NavigationManager navigationManager;
 
 <div class="container">
     <h1>Login</h1>
@@ -20,14 +20,17 @@
         <label>Password: </label>
         <input type="password" @bind="passwordValue">
     </div>
+    @if (incorrectLogin) {
+        <h4>Invalid Credentials</h4>
+    }
     <Button ButtonText="Login" onClick="@HandleClick"></Button>
 </div>
 
 @code {
-    [Inject] private NavigationManager navigationManager { get; set; }
     private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5000") };
     private string usernameValue = "";
     private string passwordValue = "";
+    private bool incorrectLogin = false;
 
     private async void HandleClick(MouseEventArgs args)
     {
@@ -47,7 +50,13 @@
 
             AuthService.Person = person;
             AuthService.IsLoggedIn = true;
-            navigationManager.NavigateTo("/");
+            navigationManager.NavigateTo("/home");
+        } else {
+            incorrectLogin = true;
         }
+     
+        usernameValue = "";
+        passwordValue = "";
+    
     }
 }
