@@ -1,0 +1,33 @@
+@using DB.models;
+
+<div class="expense-item">
+    <div class="category">@Expense.Category</div>
+    <div class="price">$@Expense.Price</div>
+</div>
+
+<style>
+    .expense-item {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f5f5f5;
+        font-size: 1.2rem;
+    }
+
+    .category {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .price {
+        font-size: 1.2rem;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public Expense Expense { get; set; }
+}

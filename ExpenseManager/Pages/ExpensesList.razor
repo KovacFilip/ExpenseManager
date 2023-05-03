@@ -11,8 +11,7 @@
 @if (loaded && expenses != null) {
     @foreach (var expense in expenses)
     {
-        <div> @expense.Category </div>
-        <div> @expense.Price </div>
+        <ExpenseItem Expense=@expense></ExpenseItem>
     }
 } else if (loaded) {
     <h2>You don't have any expenses at the moment</h2>
