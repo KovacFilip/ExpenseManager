@@ -1,0 +1,80 @@
+@page "/AddExpense";
+@using Helper.ObjectsToApi;
+@using System.Text.Json;
+@inject HttpClient HttpClient;
+@inject NavigationManager navigationManager;
+@inject AuthService AuthService;
+
+
+<div class="container">
+    <div class="marginTop item">
+        <label for="category">Category:</label>
+        <input type="text" class="categoryInput" id="category" @bind="Category" />
+    </div>
+    <div class="item">
+        <label for="price">Price:</label>
+        <input type="number" class="priceInput" id="price" @bind="Price" />
+    </div>
+    <div class="buttonDiv" @onclick="AddExpense">Add Expense</div>
+</div>
+
+@code {
+    private string Category { get; set; }
+    private int Price { get; set; }
+
+    private async void AddExpense(MouseEventArgs args)
+    {
+        var newExpense = new NewExpense();
+        newExpense.Category = Category;
+        newExpense.Price = Price;
+        newExpense.PersonId = AuthService.Person.Id;
+
+        var response = await HttpClient.PostAsync("/api/createExpense", new StringContent(JsonSerializer.Serialize(newExpense)));
+
+        if ((int) response.StatusCode == 200) {
+            navigationManager.NavigateTo("/UserHome"); 
+        }
+    }
+}
+
+<style>
+
+    .item {
+        margin: 20px;
+    }
+    .marginTop { 
+        margin-top: 150px;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .categoryInput {
+        display: block;
+        min-width: 600px; 
+    }
+
+    .priceInput {
+        display: block;
+        min-width: 150px;
+    }
+
+    .buttonDiv {
+        color: white;
+        background-color: #e74646;
+        cursor: pointer;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 50px;
+        min-width: 200px;
+        min-height: 50px;
+        margin: 20px
+    }
+
+    .buttonDiv:hover {
+        background-color: #57423f;
+}
+
+</style>

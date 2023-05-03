@@ -33,89 +33,9 @@ namespace API
             app.UseRouting();
             app.UseEndpoints(async endpoints =>
             {
-                endpoints.MapGet(
-                    "/api/home",
-                    () => "Sorry Mario. The princess is in another castle"
-                );
-
-                endpoints.MapPost(
-                    "/api/login",
-                    async context =>
-                    {
-                        var requestBody = await new StreamReader(
-                            context.Request.Body
-                        ).ReadToEndAsync();
-
-                        var requestBodyJson = JsonSerializer.Deserialize<LoginObject>(requestBody);
-
-                        if (
-                            requestBody == null
-                            || requestBodyJson!.Username == null
-                            || requestBodyJson.PasswordHash == null
-                        )
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                            await context.Response.WriteAsync("Empty body");
-                        }
-                        else
-                        {
-                            Person? person;
-
-                            using (var uow = new UnitOfWork())
-                            {
-                                person = await uow.Login(
-                                    requestBodyJson.Username,
-                                    requestBodyJson.PasswordHash
-                                );
-                            }
-
-                            if (person != null)
-                            {
-                                Console.WriteLine($"{person.Username}, {person.Id}, {person.Role}");
-
-                                string resToFe = JsonSerializer.Serialize(person);
-                                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                                await context.Response.WriteAsync(resToFe);
-                            }
-                            else
-                            {
-                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                                await context.Response.WriteAsync("Incorrect login credentials!");
-                            }
-                        }
-                    }
-                );
-
-                endpoints.MapPost(
-                    "/api/getExpenses",
-                    async context =>
-                    {
-                        var requestBody = await new StreamReader(
-                            context.Request.Body
-                        ).ReadToEndAsync();
-
-                        var requestBodyJson = JsonSerializer.Deserialize<Person>(requestBody);
-
-                        if (requestBodyJson == null)
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                            await context.Response.WriteAsync("Invalid person");
-                            return;
-                        }
-
-                        List<Expense> expenses;
-                        using (var uow = new UnitOfWork())
-                        {
-                            expenses = await uow.GetExpenses(requestBodyJson.Id);
-                        }
-
-                        string resToFe = JsonSerializer.Serialize(expenses);
-                        Console.WriteLine($"{resToFe}");
-
-                        context.Response.StatusCode = (int)HttpStatusCode.OK;
-                        await context.Response.WriteAsync(resToFe);
-                    }
-                );
+                endpoints.MapPost("/api/login", Functions.Login);
+                endpoints.MapPost("/api/getExpenses", Functions.GetExpenses);
+                endpoints.MapPost("/api/createExpense", Functions.CreateExpense);
             });
         }
     }
