@@ -85,6 +85,37 @@ namespace API
                         }
                     }
                 );
+
+                endpoints.MapPost(
+                    "/api/getExpenses",
+                    async context =>
+                    {
+                        var requestBody = await new StreamReader(
+                            context.Request.Body
+                        ).ReadToEndAsync();
+
+                        var requestBodyJson = JsonSerializer.Deserialize<Person>(requestBody);
+
+                        if (requestBodyJson == null)
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            await context.Response.WriteAsync("Invalid person");
+                            return;
+                        }
+
+                        List<Expense> expenses;
+                        using (var uow = new UnitOfWork())
+                        {
+                            expenses = await uow.GetExpenses(requestBodyJson.Id);
+                        }
+
+                        string resToFe = JsonSerializer.Serialize(expenses);
+                        Console.WriteLine($"{resToFe}");
+
+                        context.Response.StatusCode = (int)HttpStatusCode.OK;
+                        await context.Response.WriteAsync(resToFe);
+                    }
+                );
             });
         }
     }

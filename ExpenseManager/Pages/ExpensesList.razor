@@ -1,0 +1,46 @@
+@page "/UserHome";
+@using DB.models;
+@using System.Text.Json;
+@inject HttpClient httpClient;
+@inject AuthService AuthService;
+
+@if (!loaded) {
+    <div>Unable to load the necesary data</div>
+}
+
+@if (loaded && expenses != null) {
+    @foreach (var expense in expenses)
+    {
+        <div> @expense.Category </div>
+        <div> @expense.Price </div>
+    }
+} else if (loaded) {
+    <h2>You don't have any expenses at the moment</h2>
+}
+
+@code {
+        private List<Expense>? expenses;
+        private bool loaded;
+        protected override async Task OnInitializedAsync()
+        {
+            var response = await httpClient.PostAsync("/api/getExpenses", new StringContent(JsonSerializer.Serialize(AuthService.Person))); 
+
+            if ((int) response.StatusCode == 200) {
+                string res = await response.Content.ReadAsStringAsync(); 
+                List<Expense>? exps = JsonSerializer.Deserialize<List<Expense>>(res);
+                
+                if (exps == null) {
+                    expenses = new List<Expense>();
+                } else {
+                    expenses = exps;
+                }
+
+                loaded = true;
+                
+            } else {
+                expenses = new List<Expense>();
+                loaded = false;
+            }
+        }
+}
+
