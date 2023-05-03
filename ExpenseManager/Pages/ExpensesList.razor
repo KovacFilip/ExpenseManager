@@ -8,10 +8,18 @@
     <div>Unable to load the necesary data</div>
 }
 
-@if (loaded && expenses != null) {
+@if (loaded && expenses != null) 
+{
+    <label>Filter: </label>
+    <input type="text" @bind="filter">
     @foreach (var expense in expenses)
     {
-        <ExpenseItem Expense=@expense></ExpenseItem>
+        @if (filter == "")
+        {
+            <ExpenseItem Expense=@expense></ExpenseItem>
+        } else if (@expense.Category.Contains(filter)) {
+            <ExpenseItem Expense=@expense></ExpenseItem>
+        }
     }
 } else if (loaded) {
     <h2>You don't have any expenses at the moment</h2>
@@ -20,6 +28,7 @@
 @code {
         private List<Expense>? expenses;
         private bool loaded;
+        private string filter = "";
         protected override async Task OnInitializedAsync()
         {
             var response = await httpClient.PostAsync("/api/getExpenses", new StringContent(JsonSerializer.Serialize(AuthService.Person))); 
