@@ -1,10 +1,12 @@
-@page "/login"
+@page "/";
+@page "/login";
 @using Helper.Helpers;
 @using Helper.ObjectsToApi;
 @using System.Text.Json;
-@inject IJSRuntime JSRuntime
 @using DB.models;
+@using ExpenseManager;
 @inject HttpClient HttpClient;
+@inject AuthService AuthService;
 
 <div class="container">
     <h1>Login</h1>
@@ -22,6 +24,7 @@
 </div>
 
 @code {
+    [Inject] private NavigationManager navigationManager { get; set; }
     private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5000") };
     private string usernameValue = "";
     private string passwordValue = "";
@@ -42,9 +45,9 @@
             string res = await response.Content.ReadAsStringAsync();
             Person? person = JsonSerializer.Deserialize<Person>(res);
 
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "id", person!.Id);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "name", person!.Username);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "role", person!.Role);
+            AuthService.Person = person;
+            AuthService.IsLoggedIn = true;
+            navigationManager.NavigateTo("/");
         }
     }
 }

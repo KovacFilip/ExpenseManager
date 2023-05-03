@@ -1,11 +1,29 @@
-﻿@using Microsoft.AspNetCore.Components.Routing;
+﻿@inject AuthService AuthService
 
+@if (AuthService.IsLoggedIn) {
     <div class="navContainer">
-        <NavButton Href="">Home</NavButton>
         <NavButton Href="counter">Counter</NavButton>
         <NavButton Href="fetchdata">Fetch Data</NavButton>
         <NavButton Href="login">Login</NavButton>
         <LogoutButton></LogoutButton>
     </div>
+}
 
-@code {}
+@code {
+
+    protected override void OnInitialized()
+    {
+        AuthService.OnAuthStateChanged += OnAuthStateChanged;
+    }
+
+    private void OnAuthStateChanged()
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthStateChanged -= OnAuthStateChanged;
+    }
+
+}

@@ -1,17 +1,15 @@
 @inject IJSRuntime JSRuntime
+@inject AuthService AuthService;
+@inject NavigationManager NavigationManager;
 
 <div @onclick="Navigate" class="logoutButton">
     Logout
 </div>
 
 @code {
-    [Inject] private NavigationManager NavigationManager { get; set; }
-
-    private async void Navigate(){
-
-        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "id");
-        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "name");
-        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "role");
+    private void Navigate(){
+        AuthService.IsLoggedIn = false;
+        AuthService.Person = null;
         NavigationManager.NavigateTo("/login");
     }
 }
