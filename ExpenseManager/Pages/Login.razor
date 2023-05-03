@@ -48,15 +48,30 @@
             string res = await response.Content.ReadAsStringAsync();
             Person? person = JsonSerializer.Deserialize<Person>(res);
 
+            if (person == null)
+            {
+                incorrectLogin = true;
+                usernameValue = "";
+                passwordValue = "";
+                return;
+            }
+
             AuthService.Person = person;
             AuthService.IsLoggedIn = true;
-            navigationManager.NavigateTo("/home");
-        } else {
+            usernameValue = "";
+            passwordValue = "";
+            if (person.Role == Roles.ADMIN) {
+                navigationManager.NavigateTo("/AdminHome");
+            } else {
+                navigationManager.NavigateTo("/UserHome");
+            }
+
+       } else {
             incorrectLogin = true;
+            usernameValue = "";
+            passwordValue = "";
         }
      
-        usernameValue = "";
-        passwordValue = "";
     
     }
 }
