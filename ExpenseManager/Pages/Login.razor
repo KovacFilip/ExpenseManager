@@ -7,6 +7,7 @@
 @inject HttpClient HttpClient;
 @inject AuthService AuthService;
 @inject NavigationManager navigationManager;
+@inject HttpClient httpClient;
 
 <div class="container">
     <h1>Login</h1>
@@ -27,7 +28,6 @@
 </div>
 
 @code {
-    private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5000") };
     private string usernameValue = "";
     private string passwordValue = "";
     private bool incorrectLogin = false;
