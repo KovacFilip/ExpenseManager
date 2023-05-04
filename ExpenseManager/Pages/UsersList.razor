@@ -1,0 +1,44 @@
+@page "/AdminHome";
+@using DB.models;
+@using System.Text.Json;
+@inject HttpClient HttpClient;
+@inject AuthService AuthService;
+
+@if (!loaded) {
+    <div>Unable to load the necesary data</div>
+}
+
+@if (loaded && users != null) {
+    @foreach (var user in users) {
+        <UserItem User=@user></UserItem>
+    }
+} else if (loaded) {
+    <h2>There aren't any users</h2>
+}
+
+@code {
+    List<Person>? users;
+    bool loaded;
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await HttpClient.PostAsync("/api/getUsers", new StringContent(JsonSerializer.Serialize(AuthService.Person)));
+
+        if ((int) response.StatusCode == 200) {
+            string res = await response.Content.ReadAsStringAsync();
+            List<Person>? usrs = JsonSerializer.Deserialize<List<Person>>(res);
+
+            if (usrs == null) {
+                users = new List<Person>(); 
+            } else {
+                users = usrs;
+            }
+
+            loaded = true;
+
+        } else {
+            users = new List<Person>();
+            loaded = false;
+        }
+    }
+
+}

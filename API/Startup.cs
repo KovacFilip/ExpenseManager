@@ -37,6 +37,7 @@ namespace API
                 endpoints.MapPost("/api/getExpenses", Functions.GetExpenses);
                 endpoints.MapPost("/api/createExpense", Functions.CreateExpense);
                 endpoints.MapPost("/api/changePassword", Functions.ChangePassword);
+                endpoints.MapPost("/api/getUsers", Functions.GetUsers);
             });
         }
     }

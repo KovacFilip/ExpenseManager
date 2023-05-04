@@ -114,12 +114,6 @@ namespace API
                 return;
             }
 
-            Console.WriteLine($"This is the body: ");
-            Console.WriteLine(
-                $"{requestBodyJson.OldPasswordHash}, {requestBodyJson.NewPasswordHash}, {requestBodyJson.PersonId}"
-            );
-            Console.WriteLine($"This is the end of the body");
-
             PasswordHash? actualPasswordHash;
             using (var uow = new UnitOfWork())
             {
@@ -147,6 +141,30 @@ namespace API
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             await context.Response.WriteAsync("Password changed");
+        }
+
+        public static async Task GetUsers(HttpContext context)
+        {
+            var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+            var requestBodyJson = JsonSerializer.Deserialize<Person>(requestBody);
+
+            if (requestBodyJson == null || requestBodyJson.Role != Roles.ADMIN)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("Unable to perform");
+                return;
+            }
+
+            List<Person> users;
+            using (var uow = new UnitOfWork())
+            {
+                users = await uow.FindAllByRole(Roles.USER);
+            }
+            string resToFe = JsonSerializer.Serialize(users);
+            Console.WriteLine($"Posting: {resToFe}");
+
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            await context.Response.WriteAsync(resToFe);
         }
     }
 }
