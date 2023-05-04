@@ -1,0 +1,38 @@
+@page "/CreateUser";
+@using DB.models;
+
+<div class="container">
+    <h2>Add a user</h2>
+    <div>
+        <label>Username</label>
+        <input>
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input>
+    </div>
+
+    <div>
+        <label>Role</label>
+        <select @bind="selectedValue">
+            <option value=@Roles.USER>User</option>
+            <option value=@Roles.ADMIN>Admin</option>
+        </select>
+    </div>
+</div>
+
+@code {
+    private int selectedValue;
+}
+
+
+<style>
+    .container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: column;
+        height: 300px;
+    }
+</style>
