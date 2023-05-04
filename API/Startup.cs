@@ -32,6 +32,7 @@ namespace API
                 endpoints.MapPost("/api/changePassword", Functions.ChangePassword);
                 endpoints.MapPost("/api/getUsers", Functions.GetUsers);
                 endpoints.MapPost("/api/createUser", Functions.CreateUser);
+                endpoints.MapPost("/api/deleteUser", Functions.DeleteUser);
             });
         }
     }

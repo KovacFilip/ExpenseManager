@@ -211,5 +211,40 @@ namespace API
                 return;
             }
         }
+
+        public static async Task DeleteUser(HttpContext context)
+        {
+            var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+            var requestBodyJson = requestBody;
+
+            if (requestBodyJson == null)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("Incorrect input");
+                return;
+            }
+
+            Person? person;
+            using (var uow = new UnitOfWork())
+            {
+                person = await uow.FindPersonByUsername(requestBodyJson);
+            }
+
+            if (person == null || person.Role == Roles.ADMIN)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("Incorrect input");
+                return;
+            }
+
+            using (var uow = new UnitOfWork())
+            {
+                await uow.DeleteUser(person.Id);
+            }
+
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            await context.Response.WriteAsync("User deleted");
+            return;
+        }
     }
 }

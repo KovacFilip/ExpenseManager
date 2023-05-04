@@ -1,0 +1,44 @@
+@page "/DeleteUser";
+@using System.Text.Json;
+@inject HttpClient HttpClient;
+@inject NavigationManager NavigationManager;
+
+<div class="container">
+    <h2 class="item">Delete User</h2>
+    <div>
+        <label class="item">Username</label>
+        <input class="item" @bind="username">
+    </div>
+    @if (unableToDelete) {
+        <div>Unable to delete this user</div>
+    }
+    <Button onClick="@DeleteUser" ButtonText="Delete user"></Button>
+</div>
+@code {
+    private string username = "";
+    private bool unableToDelete = false;
+    private async void DeleteUser(MouseEventArgs args){
+        var res = await HttpClient.PostAsync("/api/deleteUser", new StringContent(username));
+
+        if ((int)res.StatusCode == 200) {
+            NavigationManager.NavigateTo("AdminHome");
+        } else {
+            unableToDelete = true;
+            StateHasChanged();
+        }
+    }
+}
+
+
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        height: 350px;
+    }
+    
+    .item {
+        margin: 20px;
+    }
+</style>
