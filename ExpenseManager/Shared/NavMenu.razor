@@ -4,6 +4,7 @@
 @if (AuthService.IsLoggedIn) {
     <div class="navContainer">
         @if (AuthService.Person != null && AuthService.Person.Role == Roles.ADMIN) {
+            <NavButton Href="AdminHome">Users List</NavButton>
             <NavButton Href="CreateUser">Create A User</NavButton>
             <NavButton Href="DeleteUser">Delete A User</NavButton>
         }
