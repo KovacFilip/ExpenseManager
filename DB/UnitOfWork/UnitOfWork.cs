@@ -1,6 +1,5 @@
 using DB.models;
 using DB.Repository;
-using Helper.Helpers;
 
 namespace DB.UnitOfWork
 {
@@ -29,15 +28,17 @@ namespace DB.UnitOfWork
             _context.Dispose();
         }
 
-        public async Task<Person> CreateUser(string username, string password, Roles role)
+        public async Task<Person> CreateUser(string username, string passwordHash, Roles role)
         {
             Person user = new Person { Username = username, Role = role };
             var person = await _userRepo.AddPerson(user);
 
-            string hash = HelperFunctions.HashPassword(password);
-
-            PasswordHash passwordHash = new PasswordHash { Hash = hash, PersonId = person.Id };
-            await _passwordRepo.AddUserPassword(passwordHash);
+            PasswordHash passwordHashObject = new PasswordHash
+            {
+                Hash = passwordHash,
+                PersonId = person.Id
+            };
+            await _passwordRepo.AddUserPassword(passwordHashObject);
             Commit();
 
             return user;

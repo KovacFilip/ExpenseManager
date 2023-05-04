@@ -1,12 +1,5 @@
 namespace API
 {
-    using System.Net;
-    using System.Text.Json;
-    using DB.models;
-    using DB.UnitOfWork;
-    using Helper.Helpers;
-    using Helper.ObjectsToApi;
-
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -31,13 +24,14 @@ namespace API
         {
             app.UseCors();
             app.UseRouting();
-            app.UseEndpoints(async endpoints =>
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapPost("/api/login", Functions.Login);
                 endpoints.MapPost("/api/getExpenses", Functions.GetExpenses);
                 endpoints.MapPost("/api/createExpense", Functions.CreateExpense);
                 endpoints.MapPost("/api/changePassword", Functions.ChangePassword);
                 endpoints.MapPost("/api/getUsers", Functions.GetUsers);
+                endpoints.MapPost("/api/createUser", Functions.CreateUser);
             });
         }
     }

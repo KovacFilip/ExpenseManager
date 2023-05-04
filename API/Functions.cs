@@ -6,6 +6,14 @@ namespace API
     using DB.UnitOfWork;
     using Helper.ObjectsToApi;
 
+    // Had to add this here, because I would have some cyclic dependency in API models (because of Roles)
+    public class CreateUserApiModel
+    {
+        public string? Username { get; set; }
+        public string? PasswordHash { get; set; }
+        public Roles Role { get; set; }
+    }
+
     public static class Functions
     {
         public static async Task Login(HttpContext context)
@@ -165,6 +173,43 @@ namespace API
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             await context.Response.WriteAsync(resToFe);
+        }
+
+        public static async Task CreateUser(HttpContext context)
+        {
+            var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+            var requestBodyJson = JsonSerializer.Deserialize<CreateUserApiModel>(requestBody);
+
+            if (
+                requestBodyJson == null
+                || requestBodyJson.Username == null
+                || requestBodyJson.PasswordHash == null
+            )
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync("Incorrect input");
+                return;
+            }
+
+            using (var uow = new UnitOfWork())
+            {
+                var person = await uow.CreateUser(
+                    requestBodyJson.Username,
+                    requestBodyJson.PasswordHash,
+                    requestBodyJson.Role
+                );
+
+                if (person == null)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    await context.Response.WriteAsync("Incorrect input");
+                    return;
+                }
+
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                await context.Response.WriteAsync("New user created");
+                return;
+            }
         }
     }
 }

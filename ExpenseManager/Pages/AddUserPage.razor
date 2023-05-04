@@ -1,38 +1,64 @@
 @page "/CreateUser";
 @using DB.models;
+@using System.Text.Json;
+@using Helper.Helpers;
+@inject HttpClient HttpClient;
+@inject NavigationManager NavigationManager;
 
 <div class="container">
     <h2>Add a user</h2>
-    <div>
+    <div class="item">
         <label>Username</label>
-        <input>
+        <input type="text" @bind="username">
     </div>
 
-    <div>
+    <div class="item">
         <label>Password</label>
-        <input>
+        <input type="password" @bind="password">
     </div>
 
-    <div>
+    <div class="item">
         <label>Role</label>
         <select @bind="selectedValue">
             <option value=@Roles.USER>User</option>
             <option value=@Roles.ADMIN>Admin</option>
         </select>
     </div>
+    @if (troubleAddingUser) {
+        <div>Unable to add the user</div>
+    }
+    <Button onClick="@CreateUser" ButtonText="Create user"></Button>
 </div>
 
 @code {
-    private int selectedValue;
-}
+    private Roles selectedValue = Roles.USER;
+    private string username = "";
+    private string password = "";
+    private bool troubleAddingUser = false;
 
+    private async void CreateUser(MouseEventArgs args) {
+        var passwordHash = HelperFunctions.HashPassword(password);
+        var response = await HttpClient.PostAsync("/api/createUser", new StringContent(JsonSerializer.Serialize(new {Username = username, PasswordHash = passwordHash, Role=selectedValue})));
+
+        if ((int) response.StatusCode == 200){
+           NavigationManager.NavigateTo("/AdminHome"); 
+        } else {
+            troubleAddingUser = true;
+            StateHasChanged();
+        }
+    }
+    
+}
 
 <style>
     .container {
         display: flex;
-        justify-content: space-evenly;
         align-items: center;
         flex-direction: column;
         height: 300px;
+    }
+
+    .item {
+        margin: 20px;
     }
 </style>

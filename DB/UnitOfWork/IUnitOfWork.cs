@@ -4,7 +4,7 @@ namespace DB.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        Task<Person> CreateUser(string username, string password, Roles role);
+        Task<Person> CreateUser(string username, string passwordHash, Roles role);
         Task DeleteUser(int id);
         Task UpdatePersonRole(int id, Roles role);
         Task UpdatePersonUsername(int id, string username);
@@ -16,7 +16,7 @@ namespace DB.UnitOfWork
         Task RemoveExpense(int expenseId);
         Task<List<Expense>> GetExpenses(int userId);
         Task<List<Expense>> GetExpensesByCategory(int userId, string category);
-        Task<Person?> Login(string username, string password);
+        Task<Person?> Login(string username, string passwordHash);
         void Commit();
     }
 }
