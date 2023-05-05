@@ -45,10 +45,11 @@ public class UnitTest1
     {
         DatabaseInitializer.ResetDb();
         Person? person;
+        string passwordHash = HelperFunctions.HashPassword("Filip");
 
         using (var uow = new UnitOfWork())
         {
-            person = await uow.Login("Filip", "Filip");
+            person = await uow.Login("Filip", passwordHash);
         }
 
         Assert.IsNotNull(person);
@@ -324,6 +325,7 @@ public class UnitTest1
     {
         DatabaseInitializer.ResetDb();
         string newPassword = "Silne Heslo";
+        string newPasswordHash = HelperFunctions.HashPassword(newPassword);
 
         Person? person;
 
@@ -336,7 +338,7 @@ public class UnitTest1
 
         using (var uow = new UnitOfWork())
         {
-            await uow.ChangePassword(person.Id, newPassword);
+            await uow.ChangePassword(person.Id, newPasswordHash);
         }
 
         PasswordHash? hashCode;
